@@ -4,8 +4,7 @@ import inspect
 def implements(spec):
     def f(fake_class):
         methods_of_klass = inspect.getmembers(fake_class,
-                                              predicate=inspect.ismethod)
-
+                                              predicate=inspect.isroutine)
         for method_name, method in methods_of_klass:
             spec_method = getattr(spec, method_name, None)
 
