@@ -11,3 +11,6 @@ env:
 install: pip install -U tox
 
 script: tox
+
+python:
+  - 3.5
