@@ -1,28 +1,40 @@
 import inspect
 
+from splenda.exceptions import SplendaException
+
 
 def implements(spec):
-    def f(fake_class):
-        methods_of_klass = inspect.getmembers(fake_class,
-                                              predicate=inspect.isroutine)
-        for method_name, method in methods_of_klass:
-            spec_method = getattr(spec, method_name, None)
+    def f(fake_cls):
+        methods_of_fake_cls = inspect.getmembers(fake_cls,
+                                                 predicate=inspect.isroutine)
+
+        for fake_method_name, fake_method in methods_of_fake_cls:
+            spec_method = getattr(spec, fake_method_name, None)
 
             if not callable(spec_method):
-                raise MethodMismatchException(method_name, fake_class, spec)
-        return fake_class
+                raise MethodMismatchException(fake_method_name, fake_cls, spec)
+            elif not args_match(spec_method, fake_method):
+                raise MethodArgumentMismatchException(fake_method_name, fake_cls, spec)
+
+        return fake_cls
 
     return f
 
 
-class MethodMismatchException(Exception):
-    def __init__(self, method_name, fake_class, spec_class):
-        self.fake_class = fake_class
-        self.spec_class = spec_class
-        self.method_name = method_name
+def args_match(spec_method, fake_method):
+    if inspect.ismethoddescriptor(spec_method) or inspect.isbuiltin(spec_method):
+        return True
 
-    def __str__(self):
-        spec_name = self.spec_class.__name__
-        fake_name = self.fake_class.__name__
-        return "{0} implements {1}. {2} does not.".format(
-            fake_name, self.method_name, spec_name)
+    spec_method_args = inspect.getargspec(spec_method)
+    fake_method_args = inspect.getargspec(fake_method)
+    print(fake_method_args)
+    return len(spec_method_args.args) == len(fake_method_args.args)
+
+
+class MethodMismatchException(SplendaException):
+    message = "{fake_name} implements {method_name}. {spec_name} does not."
+
+
+class MethodArgumentMismatchException(SplendaException):
+    message = "{fake_name} implements {method_name}" \
+              " with a different number of arguments then {spec_name}."

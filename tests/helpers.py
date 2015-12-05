@@ -1,7 +1,5 @@
 from contextlib import contextmanager
 
-class Context(object):
-    pass
 
 @contextmanager
 def assert_raises(expected_exception):
@@ -16,4 +14,9 @@ def assert_raises(expected_exception):
     except Exception as e:
         raise Exception('Unexpected exception thrown:', e)
     else:
-       raise Exception('{} not thrown'.format(expected_exception))
+        raise Exception('{} not thrown'.format(expected_exception))
+
+
+class Context(object):
+    def __init__(self):
+        self.exception = None
