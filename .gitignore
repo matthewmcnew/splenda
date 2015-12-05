@@ -1,5 +1,6 @@
-venv/*
+venv*/*
 .idea
 *.pyc
 
 .tox/*
+splenda.egg-info/*
