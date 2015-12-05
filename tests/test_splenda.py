@@ -1,6 +1,6 @@
 import unittest
-
 import splenda
+
 
 class TestSplenda(unittest.TestCase):
     def test_implements(self):

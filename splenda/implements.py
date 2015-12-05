@@ -16,7 +16,6 @@ def implements(spec):
 
 
 class MethodMismatchException(Exception):
-
     def __init__(self, method_name, fake_class, spec_class):
         self.fake_class = fake_class
         self.spec_class = spec_class
