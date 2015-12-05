@@ -1,5 +1,6 @@
 import unittest
 import splenda
+from tests.helpers import assert_raises
 
 
 class TestSplenda(unittest.TestCase):
@@ -12,7 +13,7 @@ class TestSplenda(unittest.TestCase):
         self.assertEqual(Fake().method_to_fake(), 1)
 
     def test_implements_throws_error_if_method_does_not_exist_on_spec(self):
-        with self.assertRaises(splenda.MethodMismatchException) as cm:
+        with assert_raises(splenda.MethodMismatchException) as cm:
             @splenda.implements(spec=ServiceToFake)
             class Fake(object):
                 def some_other_method(self):
